@@ -10,16 +10,15 @@ import LinearGradient from 'react-native-linear-gradient';
 import CheckBox from '@react-native-community/checkbox';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-function Login() {
+function Register() {
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [rememberMe, setRememberMe] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-
-  const handleLogin = () => {
-    console.log('Login pressed', { username, password, rememberMe });
-    // Add your login logic here
-  };
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   return (
     <LinearGradient
@@ -27,7 +26,40 @@ function Login() {
       style={styles.container}
     >
       <View style={styles.loginContainer}>
-        <Text style={styles.title}>Login</Text>
+        <Text style={styles.title}>Register</Text>
+
+        <View style={styles.inputContainer}>
+          <Icon name="id-card" size={20} color="#6B7280" style={styles.icon} />
+          <TextInput
+            style={styles.inputWithIcon}
+            placeholder="First Name"
+            placeholderTextColor="#6B7280"
+            value={firstName}
+            onChangeText={setFirstName}
+          />
+        </View>
+
+        <View style={styles.inputContainer}>
+          <Icon name="id-card" size={20} color="#6B7280" style={styles.icon} />
+          <TextInput
+            style={styles.inputWithIcon}
+            placeholder="Last Name"
+            placeholderTextColor="#6B7280"
+            value={lastName}
+            onChangeText={setLastName}
+          />
+        </View>
+
+        <View style={styles.inputContainer}>
+          <Icon name="envelope" size={20} color="#6B7280" style={styles.icon} />
+          <TextInput
+            style={styles.inputWithIcon}
+            placeholder="Email"
+            placeholderTextColor="#6B7280"
+            value={email}
+            onChangeText={setEmail}
+          />
+        </View>
 
         <View style={styles.inputContainer}>
           <Icon name="user" size={20} color="#6B7280" style={styles.icon} />
@@ -62,31 +94,30 @@ function Login() {
           </TouchableOpacity>
         </View>
 
-        <View style={styles.rememberAndForgotContainer}>
-          <View style={styles.checkboxContainer}>
-            <CheckBox
-              value={rememberMe}
-              onValueChange={setRememberMe}
-              tintColors={{ true: '#fff', false: '#fff' }}
+        <View style={styles.passwordContainer}>
+          <Icon name="lock" size={20} color="#6B7280" style={styles.icon} />
+          <TextInput
+            style={styles.passwordInput}
+            placeholder="Confirm Password"
+            placeholderTextColor="#6B7280"
+            value={confirmPassword}
+            onChangeText={setConfirmPassword}
+            secureTextEntry={!showConfirmPassword}
+          />
+          <TouchableOpacity
+            style={styles.eyeIcon}
+            onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+          >
+            <Icon
+              name={showConfirmPassword ? 'eye' : 'eye-slash'}
+              size={20}
+              color="#fff"
             />
-            <Text style={styles.checkboxLabel}>Remember me</Text>
-          </View>
-          <Text style={styles.forgotPassword}>Forgot Password?</Text>
+          </TouchableOpacity>
         </View>
 
-        <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-          <Text style={styles.loginButtonText}>Login</Text>
-        </TouchableOpacity>
-
-        <View style={styles.noAccount}>
-          <Text style={styles.noAccountText}>Don't have an account? </Text>
-          <Text style={styles.registerText}>Register</Text>
-        </View>
-
-        <Text style={styles.orText}>or</Text>
-
-        <TouchableOpacity style={styles.guestButton}>
-          <Text style={styles.guestButtonText}>Sign in as Guest</Text>
+        <TouchableOpacity style={styles.registerButton}>
+          <Text style={styles.registerButtonText}>Register</Text>
         </TouchableOpacity>
       </View>
     </LinearGradient>
@@ -166,24 +197,7 @@ const styles = StyleSheet.create({
     top: 15,
     zIndex: 1,
   },
-  rememberAndForgotContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  checkboxContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  checkboxLabel: {
-    color: '#fff',
-  },
-  forgotPassword: {
-    color: '#fff',
-    textDecorationLine: 'underline',
-  },
-  loginButton: {
+  registerButton: {
     backgroundColor: '#fff',
     height: 50,
     borderRadius: 999,
@@ -191,43 +205,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 8,
   },
-  loginButtonText: {
+  registerButtonText: {
     color: '#0f1528',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  noAccount: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: 16,
-  },
-  noAccountText: {
-    color: '#fff',
-  },
-  registerText: {
-    color: '#fff',
-    fontWeight: 'bold',
-  },
-  orText: {
-    color: '#fff',
-    textAlign: 'center',
-    marginTop: 16,
-  },
-  guestButton: {
-    backgroundColor: 'transparent',
-    height: 50,
-    borderRadius: 999,
-    borderColor: `#fff`,
-    borderWidth: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 8,
-  },
-  guestButtonText: {
-    color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
   },
 });
 
-export default Login;
+export default Register;
