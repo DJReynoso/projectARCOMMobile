@@ -5,12 +5,16 @@ import {
   View,
   TextInput,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import CheckBox from '@react-native-community/checkbox';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import axios from 'axios';
 
-function Register() {
+const API_URL = 'http://10.0.2.2:5001';
+
+function Register({ onNavigate }: any) {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -19,7 +23,35 @@ function Register() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const handleRegister = async () => {
+    if (password !== confirmPassword) {
+      Alert.alert('Error', 'Passwords do not match');
+      return;
+    }
 
+    try {
+      const response = await axios.post(`${API_URL}/api/auth/register`, {
+        first_name: firstName,
+        last_name: lastName,
+        name: username,
+        email: email,
+        password: password,
+      });
+
+      console.log('Registration successful:', response.data);
+      Alert.alert('Success', 'Registration successful! Please login.');
+      onNavigate('Login');
+    } catch (error: any) {
+      console.error(
+        'Registration failed:',
+        error.response?.data || error.message,
+      );
+      Alert.alert(
+        'Error',
+        error.response?.data?.message || 'Registration failed',
+      );
+    }
+  };
   return (
     <LinearGradient
       colors={['#020E2A', '#0F172A', '#0B2154']}
@@ -116,7 +148,10 @@ function Register() {
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity style={styles.registerButton}>
+        <TouchableOpacity
+          style={styles.registerButton}
+          onPress={handleRegister}
+        >
           <Text style={styles.registerButtonText}>Register</Text>
         </TouchableOpacity>
       </View>
