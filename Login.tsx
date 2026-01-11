@@ -5,22 +5,40 @@ import {
   View,
   TextInput,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import CheckBox from '@react-native-community/checkbox';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
+
+const BACKEND_URL = 'http://10.0.2.2:5001';
 
 function Login() {
+  const navigation = useNavigation();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleLogin = () => {
-    console.log('Login pressed', { username, password, rememberMe });
-    // Add your login logic here
+  const handleLogin = async () => {
+    try {
+      const response = await axios.post(`${BACKEND_URL}/api/auth/login`, {
+        name: username, // Backend expects 'name' field
+        password: password,
+      });
+      // This is where we save ang token
+      const token = response.data.token;
+      await AsyncStorage.setItem('authtoken', token);
+      console.log('Login successful', response.data);
+      navigation.navigate('Dashboard' as never);
+    } catch (error: any) {
+      console.error('Login failed:', error.response?.data || error.message);
+      Alert.alert('Error', error.response?.data?.message || 'Login failed');
+    }
   };
-
   return (
     <LinearGradient
       colors={['#020E2A', '#0F172A', '#0B2154']}
@@ -80,7 +98,11 @@ function Login() {
 
         <View style={styles.noAccount}>
           <Text style={styles.noAccountText}>Don't have an account? </Text>
-          <Text style={styles.registerText}>Register</Text>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Register' as never)}
+          >
+            <Text style={styles.registerText}>Register</Text>
+          </TouchableOpacity>
         </View>
 
         <Text style={styles.orText}>or</Text>

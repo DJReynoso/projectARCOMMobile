@@ -20,7 +20,7 @@ function App() {
     <>
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName="Dashboard"
+          initialRouteName="Login"
           screenOptions={{
             headerShown: false,
             cardStyleInterpolator: CardStyleInterpolators.forNoAnimation,
