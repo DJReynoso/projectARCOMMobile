@@ -1,6 +1,5 @@
 import { Text, StyleSheet, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import NavBar from '../NavBar';
 
 function Profile() {
   return (
@@ -11,7 +10,6 @@ function Profile() {
       <View style={styles.content}>
         <Text style={{ color: '#fff', fontSize: 24 }}>Profile</Text>
       </View>
-      <NavBar />
     </LinearGradient>
   );
 }
@@ -19,7 +17,6 @@ function Profile() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'space-between',
   },
   content: {
     flex: 1,

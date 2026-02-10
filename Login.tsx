@@ -33,7 +33,7 @@ function Login() {
       const token = response.data.token;
       await AsyncStorage.setItem('authtoken', token);
       console.log('Login successful', response.data);
-      navigation.navigate('Dashboard' as never);
+      navigation.navigate('MainApp' as never);
     } catch (error: any) {
       console.error('Login failed:', error.response?.data || error.message);
       Alert.alert('Error', error.response?.data?.message || 'Login failed');
