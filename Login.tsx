@@ -6,6 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
   Alert,
+  Image,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import CheckBox from '@react-native-community/checkbox';
@@ -44,6 +45,9 @@ function Login() {
       colors={['#020E2A', '#0F172A', '#0B2154']}
       style={styles.container}
     >
+      <View style={styles.logoContainer}>
+        <Image source={require('./assets/ARCOMLogo.png')} style={styles.logo} />
+      </View>
       <View style={styles.loginContainer}>
         <Text style={styles.title}>Login</Text>
 
@@ -122,11 +126,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    fontSize: 36,
+    fontSize: 32,
     fontWeight: 'bold',
     color: '#fff',
     marginBottom: 20,
     textAlign: 'center',
+  },
+  logoContainer: {
+    alignItems: 'center',
+    marginBottom: 30,
+  },
+  logo: {
+    width: 300,
+    height: 150,
+    resizeMode: 'contain',
   },
   loginContainer: {
     width: 360,
