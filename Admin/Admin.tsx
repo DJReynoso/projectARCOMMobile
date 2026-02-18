@@ -1,14 +1,14 @@
 import { Text, StyleSheet, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
-function Profile() {
+function Admin() {
   return (
     <LinearGradient
       colors={['#020E2A', '#0F172A', '#0B2154']}
       style={styles.container}
     >
       <View style={styles.content}>
-        <Text style={{ color: '#fff', fontSize: 24 }}>Profile</Text>
+        <Text style={{ color: '#fff', fontSize: 24 }}>Admin</Text>
       </View>
     </LinearGradient>
   );
@@ -25,4 +25,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Profile;
+export default Admin;

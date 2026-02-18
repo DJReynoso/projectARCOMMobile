@@ -13,7 +13,7 @@ import Register from './Register';
 import Dashboard from './Dashboard/Dashboard';
 import NodeDetails from './NodeDetails/NodeDetails';
 import Alerts from './Alerts/Alerts';
-import Profile from './Profile/Profile';
+import Admin from './Admin/Admin';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -57,15 +57,15 @@ function AlertsStack() {
   );
 }
 
-// Profile Stack Navigator
-function ProfileStack() {
+// Admin Stack Navigator
+function AdminStack() {
   return (
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
       }}
     >
-      <Stack.Screen name="ProfileHome" component={Profile} />
+      <Stack.Screen name="AdminHome" component={Admin} />
     </Stack.Navigator>
   );
 }
@@ -125,10 +125,10 @@ function MainTabs() {
         }}
       />
       <Tab.Screen
-        name="Profile"
-        component={ProfileStack}
+        name="Admin"
+        component={AdminStack}
         options={{
-          tabBarLabel: 'Profile',
+          tabBarLabel: 'Admin',
           tabBarIcon: ({ color, size }) => (
             <Icon name="person-outline" color={color} size={size} />
           ),
