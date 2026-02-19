@@ -10,7 +10,6 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import CheckBox from '@react-native-community/checkbox';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { Picker } from '@react-native-picker/picker';
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
 
@@ -26,7 +25,6 @@ function Register() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [role, setRole] = useState('User');
   const handleRegister = async () => {
     if (password !== confirmPassword) {
       Alert.alert('Error', 'Passwords do not match');
@@ -106,26 +104,6 @@ function Register() {
             value={username}
             onChangeText={setUsername}
           />
-        </View>
-
-        <View style={styles.pickerContainer}>
-          <Icon
-            name="user-circle"
-            size={20}
-            color="#6B7280"
-            style={styles.pickerIcon}
-          />
-          <View style={styles.pickerWrapper}>
-            <Picker
-              selectedValue={role}
-              onValueChange={itemValue => setRole(itemValue)}
-              style={styles.picker}
-              dropdownIconColor="#fff"
-            >
-              <Picker.Item label="User" value="User" />
-              <Picker.Item label="Admin" value="Admin" />
-            </Picker>
-          </View>
         </View>
 
         <View style={styles.passwordContainer}>
@@ -255,31 +233,6 @@ const styles = StyleSheet.create({
     right: 16,
     top: 15,
     zIndex: 1,
-  },
-  pickerContainer: {
-    position: 'relative',
-    height: 50,
-    backgroundColor: 'transparent',
-    borderRadius: 999,
-    borderColor: '#fff',
-    borderWidth: 1,
-    marginBottom: 16,
-    flexDirection: 'row',
-    alignItems: 'center',
-    overflow: 'hidden',
-  },
-  pickerIcon: {
-    position: 'absolute',
-    left: 16,
-    zIndex: 1,
-  },
-  pickerWrapper: {
-    flex: 1,
-    marginLeft: 40,
-  },
-  picker: {
-    color: '#fff',
-    height: 50,
   },
   registerButton: {
     backgroundColor: '#fff',

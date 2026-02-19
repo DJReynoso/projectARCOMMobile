@@ -108,12 +108,6 @@ function Login() {
             <Text style={styles.registerText}>Register</Text>
           </TouchableOpacity>
         </View>
-
-        <Text style={styles.orText}>or</Text>
-
-        <TouchableOpacity style={styles.guestButton}>
-          <Text style={styles.guestButtonText}>Sign in as Guest</Text>
-        </TouchableOpacity>
       </View>
     </LinearGradient>
   );
@@ -241,26 +235,6 @@ const styles = StyleSheet.create({
   },
   registerText: {
     color: '#fff',
-    fontWeight: 'bold',
-  },
-  orText: {
-    color: '#fff',
-    textAlign: 'center',
-    marginTop: 16,
-  },
-  guestButton: {
-    backgroundColor: 'transparent',
-    height: 50,
-    borderRadius: 999,
-    borderColor: `#fff`,
-    borderWidth: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 8,
-  },
-  guestButtonText: {
-    color: '#fff',
-    fontSize: 16,
     fontWeight: 'bold',
   },
 });
