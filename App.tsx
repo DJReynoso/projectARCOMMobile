@@ -13,7 +13,7 @@ import Register from './Register';
 import Dashboard from './Dashboard/Dashboard';
 import NodeDetails from './NodeDetails/NodeDetails';
 import Alerts from './Alerts/Alerts';
-import Admin from './Admin/Admin';
+import AdminLogin from './Admin/AdminLogin';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -57,15 +57,15 @@ function AlertsStack() {
   );
 }
 
-// Admin Stack Navigator
-function AdminStack() {
+// AdminLogin Stack Navigator
+function AdminLoginStack() {
   return (
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
       }}
     >
-      <Stack.Screen name="AdminHome" component={Admin} />
+      <Stack.Screen name="AdminHome" component={AdminLogin} />
     </Stack.Navigator>
   );
 }
@@ -126,7 +126,7 @@ function MainTabs() {
       />
       <Tab.Screen
         name="Admin"
-        component={AdminStack}
+        component={AdminLoginStack}
         options={{
           tabBarLabel: 'Admin',
           tabBarIcon: ({ color, size }) => (
@@ -143,18 +143,18 @@ function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="Login"
+        initialRouteName="MainApp"
         screenOptions={{
           headerShown: false,
           cardStyleInterpolator: CardStyleInterpolators.forNoAnimation,
         }}
       >
-        {/* Auth Screens */}
+        {/* Main App with Bottom Tabs - Default for guest users */}
+        <Stack.Screen name="MainApp" component={MainTabs} />
+
+        {/* Auth Screens - Only accessible from Admin tab */}
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Register" component={Register} />
-
-        {/* Main App with Bottom Tabs */}
-        <Stack.Screen name="MainApp" component={MainTabs} />
       </Stack.Navigator>
     </NavigationContainer>
   );
