@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import {
   CardAnimationContext,
@@ -8,12 +8,14 @@ import {
 } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Login from './Login';
 import Register from './Register';
 import Dashboard from './Dashboard/Dashboard';
 import NodeDetails from './NodeDetails/NodeDetails';
 import Alerts from './Alerts/Alerts';
 import AdminLogin from './Admin/AdminLogin';
+import AdminDashboard from './Admin/AdminDashboard';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -59,13 +61,31 @@ function AlertsStack() {
 
 // AdminLogin Stack Navigator
 function AdminLoginStack() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    checkAuth();
+  }, []);
+
+  const checkAuth = async () => {
+    try {
+      const token = await AsyncStorage.getItem('authtoken');
+      setIsAuthenticated(!!token);
+    } catch (error) {
+      console.error('Error checking auth:', error);
+      setIsAuthenticated(false);
+    }
+  };
+
   return (
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
       }}
     >
-      <Stack.Screen name="AdminHome" component={AdminLogin} />
+      <Stack.Screen name="AdminHome">
+        {() => (isAuthenticated ? <AdminDashboard /> : <AdminLogin />)}
+      </Stack.Screen>
     </Stack.Navigator>
   );
 }
@@ -155,6 +175,9 @@ function App() {
         {/* Auth Screens - Only accessible from Admin tab */}
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Register" component={Register} />
+
+        {/* Admin Dashboard - Accessible after authentication */}
+        <Stack.Screen name="Admin Dashboard" component={AdminDashboard} />
       </Stack.Navigator>
     </NavigationContainer>
   );
