@@ -59,6 +59,13 @@ function Register() {
       colors={['#020E2A', '#0F172A', '#0B2154']}
       style={styles.container}
     >
+      <TouchableOpacity
+        style={styles.backButton}
+        onPress={() => navigation.goBack()}
+      >
+        <Icon name="arrow-left" size={24} color="#fff" />
+      </TouchableOpacity>
+
       <View style={styles.loginContainer}>
         <Text style={styles.title}>Register</Text>
 
@@ -166,6 +173,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  backButton: {
+    position: 'absolute',
+    top: 50,
+    left: 20,
+    zIndex: 10,
+    padding: 10,
   },
   title: {
     fontSize: 36,

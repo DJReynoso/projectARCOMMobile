@@ -45,6 +45,13 @@ function Login() {
       colors={['#020E2A', '#0F172A', '#0B2154']}
       style={styles.container}
     >
+      <TouchableOpacity
+        style={styles.exitButton}
+        onPress={() => navigation.goBack()}
+      >
+        <Icon name="arrow-left" size={24} color="#fff" />
+      </TouchableOpacity>
+
       <View style={styles.logoContainer}>
         <Image source={require('./assets/ARCOMLogo.png')} style={styles.logo} />
       </View>
@@ -236,6 +243,13 @@ const styles = StyleSheet.create({
   registerText: {
     color: '#fff',
     fontWeight: 'bold',
+  },
+  exitButton: {
+    position: 'absolute',
+    top: 50,
+    left: 20,
+    zIndex: 10,
+    padding: 10,
   },
 });
 
