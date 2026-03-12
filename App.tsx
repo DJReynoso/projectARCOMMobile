@@ -1,21 +1,18 @@
 import 'react-native-gesture-handler';
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import {
-  CardAnimationContext,
   createStackNavigator,
   CardStyleInterpolators,
 } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import Login from './Login';
-import Register from './Register';
+import { AuthProvider, useAuth } from './store/AuthContext';
 import Dashboard from './Dashboard/Dashboard';
 import NodeDetails from './NodeDetails/NodeDetails';
 import Alerts from './Alerts/Alerts';
-import AdminLogin from './Admin/AdminLogin';
-import AdminDashboard from './Admin/AdminDashboard';
+import Tasks from './Worker/Tasks';
+import WorkerLogin from './Worker/WorkerLogin';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -23,11 +20,7 @@ const Tab = createBottomTabNavigator();
 // Dashboard Stack Navigator
 function DashboardStack() {
   return (
-    <Stack.Navigator
-      screenOptions={{
-        headerShown: false,
-      }}
-    >
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="DashboardHome" component={Dashboard} />
     </Stack.Navigator>
   );
@@ -36,11 +29,7 @@ function DashboardStack() {
 // NodeDetails Stack Navigator
 function NodeDetailsStack() {
   return (
-    <Stack.Navigator
-      screenOptions={{
-        headerShown: false,
-      }}
-    >
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="NodeDetailsHome" component={NodeDetails} />
     </Stack.Navigator>
   );
@@ -49,49 +38,33 @@ function NodeDetailsStack() {
 // Alerts Stack Navigator
 function AlertsStack() {
   return (
-    <Stack.Navigator
-      screenOptions={{
-        headerShown: false,
-      }}
-    >
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="AlertsHome" component={Alerts} />
     </Stack.Navigator>
   );
 }
 
-// AdminLogin Stack Navigator
-function AdminLoginStack() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  useEffect(() => {
-    checkAuth();
-  }, []);
-
-  const checkAuth = async () => {
-    try {
-      const token = await AsyncStorage.getItem('authtoken');
-      setIsAuthenticated(!!token);
-    } catch (error) {
-      console.error('Error checking auth:', error);
-      setIsAuthenticated(false);
-    }
-  };
-
+// Tasks Stack Navigator
+function TasksStack() {
   return (
-    <Stack.Navigator
-      screenOptions={{
-        headerShown: false,
-      }}
-    >
-      <Stack.Screen name="AdminHome">
-        {() => (isAuthenticated ? <AdminDashboard /> : <AdminLogin />)}
-      </Stack.Screen>
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="TasksHome" component={Tasks} />
+    </Stack.Navigator>
+  );
+}
+
+// Worker Login Stack Navigator
+function WorkerLoginStack() {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="WorkerLoginHome" component={WorkerLogin} />
     </Stack.Navigator>
   );
 }
 
 // Bottom Tab Navigator
 function MainTabs() {
+  const { isWorker } = useAuth();
   return (
     <Tab.Navigator
       screenOptions={{
@@ -144,13 +117,29 @@ function MainTabs() {
           ),
         }}
       />
+      {isWorker && (
+        <Tab.Screen
+          name="Tasks"
+          component={TasksStack}
+          options={{
+            tabBarLabel: 'Tasks',
+            tabBarIcon: ({ color, size }) => (
+              <Icon name="checkbox-outline" color={color} size={size} />
+            ),
+          }}
+        />
+      )}
       <Tab.Screen
-        name="Admin"
-        component={AdminLoginStack}
+        name="WorkerLogin"
+        component={WorkerLoginStack}
         options={{
-          tabBarLabel: 'Admin',
+          tabBarLabel: isWorker ? 'Worker' : 'Login as Worker',
           tabBarIcon: ({ color, size }) => (
-            <Icon name="person-outline" color={color} size={size} />
+            <Icon
+              name={isWorker ? 'person-circle-outline' : 'log-in-outline'}
+              color={color}
+              size={size}
+            />
           ),
         }}
       />
@@ -161,25 +150,19 @@ function MainTabs() {
 // Root Navigator
 function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        initialRouteName="MainApp"
-        screenOptions={{
-          headerShown: false,
-          cardStyleInterpolator: CardStyleInterpolators.forNoAnimation,
-        }}
-      >
-        {/* Main App with Bottom Tabs - Default for guest users */}
-        <Stack.Screen name="MainApp" component={MainTabs} />
-
-        {/* Auth Screens - Only accessible from Admin tab */}
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Register" component={Register} />
-
-        {/* Admin Dashboard - Accessible after authentication */}
-        <Stack.Screen name="Admin Dashboard" component={AdminDashboard} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <AuthProvider>
+      <NavigationContainer>
+        <Stack.Navigator
+          initialRouteName="MainApp"
+          screenOptions={{
+            headerShown: false,
+            cardStyleInterpolator: CardStyleInterpolators.forNoAnimation,
+          }}
+        >
+          <Stack.Screen name="MainApp" component={MainTabs} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </AuthProvider>
   );
 }
 
