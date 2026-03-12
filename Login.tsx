@@ -6,6 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
   Alert,
+  Image,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import CheckBox from '@react-native-community/checkbox';
@@ -33,7 +34,8 @@ function Login() {
       const token = response.data.token;
       await AsyncStorage.setItem('authtoken', token);
       console.log('Login successful', response.data);
-      navigation.navigate('MainApp' as never);
+      // Navigate to Admin Dashboard
+      navigation.navigate('Admin Dashboard' as never);
     } catch (error: any) {
       console.error('Login failed:', error.response?.data || error.message);
       Alert.alert('Error', error.response?.data?.message || 'Login failed');
@@ -44,6 +46,16 @@ function Login() {
       colors={['#020E2A', '#0F172A', '#0B2154']}
       style={styles.container}
     >
+      <TouchableOpacity
+        style={styles.exitButton}
+        onPress={() => navigation.goBack()}
+      >
+        <Icon name="arrow-left" size={24} color="#fff" />
+      </TouchableOpacity>
+
+      <View style={styles.logoContainer}>
+        <Image source={require('./assets/ARCOMLogo.png')} style={styles.logo} />
+      </View>
       <View style={styles.loginContainer}>
         <Text style={styles.title}>Login</Text>
 
@@ -104,12 +116,6 @@ function Login() {
             <Text style={styles.registerText}>Register</Text>
           </TouchableOpacity>
         </View>
-
-        <Text style={styles.orText}>or</Text>
-
-        <TouchableOpacity style={styles.guestButton}>
-          <Text style={styles.guestButtonText}>Sign in as Guest</Text>
-        </TouchableOpacity>
       </View>
     </LinearGradient>
   );
@@ -122,11 +128,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    fontSize: 36,
+    fontSize: 32,
     fontWeight: 'bold',
     color: '#fff',
     marginBottom: 20,
     textAlign: 'center',
+  },
+  logoContainer: {
+    alignItems: 'center',
+    marginBottom: 30,
+  },
+  logo: {
+    width: 300,
+    height: 150,
+    resizeMode: 'contain',
   },
   loginContainer: {
     width: 360,
@@ -230,25 +245,12 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
   },
-  orText: {
-    color: '#fff',
-    textAlign: 'center',
-    marginTop: 16,
-  },
-  guestButton: {
-    backgroundColor: 'transparent',
-    height: 50,
-    borderRadius: 999,
-    borderColor: `#fff`,
-    borderWidth: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 8,
-  },
-  guestButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
+  exitButton: {
+    position: 'absolute',
+    top: 50,
+    left: 20,
+    zIndex: 10,
+    padding: 10,
   },
 });
 

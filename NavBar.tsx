@@ -9,6 +9,19 @@ function NavBar() {
 
   return (
     <View style={styles.navigationBar}>
+      <Pressable onPress={() => navigation.navigate('Admin' as never)}>
+        {({ pressed }) => (
+          <Text
+            style={[
+              styles.navText,
+              isActive('Admin') && styles.activeText,
+              pressed && styles.pressed,
+            ]}
+          >
+            Admin
+          </Text>
+        )}
+      </Pressable>
       <Pressable onPress={() => navigation.navigate('Dashboard' as never)}>
         {({ pressed }) => (
           <Text
@@ -45,19 +58,6 @@ function NavBar() {
             ]}
           >
             Alerts
-          </Text>
-        )}
-      </Pressable>
-      <Pressable onPress={() => navigation.navigate('Profile' as never)}>
-        {({ pressed }) => (
-          <Text
-            style={[
-              styles.navText,
-              isActive('Profile') && styles.activeText,
-              pressed && styles.pressed,
-            ]}
-          >
-            Profile
           </Text>
         )}
       </Pressable>
