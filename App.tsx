@@ -13,9 +13,20 @@ import NodeDetails from './NodeDetails/NodeDetails';
 import Alerts from './Alerts/Alerts';
 import Tasks from './Worker/Tasks';
 import WorkerLogin from './Worker/WorkerLogin';
+import Home from './Home/Home';
+import WorkerHome from './Worker/WorkerHome';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
+
+// Home Stack Navigator
+function HomeStack() {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="HomeScreen" component={Home} />
+    </Stack.Navigator>
+  );
+}
 
 // Dashboard Stack Navigator
 function DashboardStack() {
@@ -40,6 +51,15 @@ function AlertsStack() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="AlertsHome" component={Alerts} />
+    </Stack.Navigator>
+  );
+}
+
+// Worker Home Stack Navigator
+function WorkerHomeStack() {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="WorkerHomeScreen" component={WorkerHome} />
     </Stack.Navigator>
   );
 }
@@ -71,16 +91,18 @@ function MainTabs() {
         headerShown: false,
         tabBarStyle: {
           backgroundColor: '#142140',
-          borderTopWidth: 0,
+          borderTopWidth: 1,
+          borderTopColor: 'rgba(255, 255, 255, 0.1)',
           height: 80,
           paddingBottom: 20,
           paddingTop: 10,
         },
-        tabBarActiveTintColor: '#fff',
-        tabBarInactiveTintColor: '#6B7280',
+        tabBarActiveTintColor: '#4e9eff',
+        tabBarInactiveTintColor: '#7a8db5',
         tabBarLabelStyle: {
-          fontSize: 12,
+          fontSize: 11,
           fontWeight: '600',
+          marginTop: 4,
         },
         tabBarIconStyle: {
           marginBottom: -5,
@@ -88,52 +110,78 @@ function MainTabs() {
       }}
     >
       <Tab.Screen
-        name="Dashboard"
-        component={DashboardStack}
+        name="Home"
+        component={isWorker ? WorkerHomeStack : HomeStack}
         options={{
-          tabBarLabel: 'Dashboard',
+          tabBarLabel: isWorker ? 'Home' : 'Home',
           tabBarIcon: ({ color, size }) => (
-            <Icon name="grid-outline" color={color} size={size} />
+            <Icon name="home-outline" color={color} size={size} />
           ),
         }}
       />
-      <Tab.Screen
-        name="NodeDetails"
-        component={NodeDetailsStack}
-        options={{
-          tabBarLabel: 'Node Details',
-          tabBarIcon: ({ color, size }) => (
-            <Icon name="list-outline" color={color} size={size} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Alerts"
-        component={AlertsStack}
-        options={{
-          tabBarLabel: 'Alerts',
-          tabBarIcon: ({ color, size }) => (
-            <Icon name="notifications-outline" color={color} size={size} />
-          ),
-        }}
-      />
+      {!isWorker && (
+        <>
+          <Tab.Screen
+            name="Dashboard"
+            component={DashboardStack}
+            options={{
+              tabBarLabel: 'Dashboard',
+              tabBarIcon: ({ color, size }) => (
+                <Icon name="grid-outline" color={color} size={size} />
+              ),
+            }}
+          />
+          <Tab.Screen
+            name="NodeDetails"
+            component={NodeDetailsStack}
+            options={{
+              tabBarLabel: 'Node Details',
+              tabBarIcon: ({ color, size }) => (
+                <Icon name="list-outline" color={color} size={size} />
+              ),
+            }}
+          />
+          <Tab.Screen
+            name="Alerts"
+            component={AlertsStack}
+            options={{
+              tabBarLabel: 'Alerts',
+              tabBarIcon: ({ color, size }) => (
+                <Icon name="notifications-outline" color={color} size={size} />
+              ),
+            }}
+          />
+        </>
+      )}
       {isWorker && (
-        <Tab.Screen
-          name="Tasks"
-          component={TasksStack}
-          options={{
-            tabBarLabel: 'Tasks',
-            tabBarIcon: ({ color, size }) => (
-              <Icon name="checkbox-outline" color={color} size={size} />
-            ),
-          }}
-        />
+        <>
+          <Tab.Screen
+            name="Tasks"
+            component={TasksStack}
+            options={{
+              tabBarLabel: 'Tasks',
+              tabBarIcon: ({ color, size }) => (
+                <Icon name="checkbox-outline" color={color} size={size} />
+              ),
+            }}
+          />
+          <Tab.Screen
+            name="Alerts"
+            component={AlertsStack}
+            options={{
+              tabBarLabel: 'Alerts',
+              tabBarIcon: ({ color, size }) => (
+                <Icon name="notifications-outline" color={color} size={size} />
+              ),
+            }}
+          />
+        </>
       )}
       <Tab.Screen
         name="WorkerLogin"
         component={WorkerLoginStack}
         options={{
-          tabBarLabel: isWorker ? 'Worker' : 'Login as Worker',
+          tabBarLabel: isWorker ? 'Account' : 'Login',
           tabBarIcon: ({ color, size }) => (
             <Icon
               name={isWorker ? 'person-circle-outline' : 'log-in-outline'}
