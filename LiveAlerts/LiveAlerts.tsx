@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Text,
   StyleSheet,
@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { sendLiveAlertNotification } from '../utils/NotificationService';
 
 const BASE_URL = 'http://10.0.2.2:5001';
 
@@ -93,6 +94,7 @@ function LiveAlerts() {
   const [predictions, setPredictions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const notifiedRecordKeys = useRef<Set<string>>(new Set());
 
   useEffect(() => {
     const fetchPredictions = async () => {
@@ -101,7 +103,25 @@ function LiveAlerts() {
         if (res.ok) {
           const data = await res.json();
           const rawPredictions = Array.isArray(data) ? data : data.value || [];
-          setPredictions(mergePredictions(rawPredictions));
+          const merged = mergePredictions(rawPredictions);
+          const notifyStates = new Set(['overflow', 'clogged', 'at_risk', 'warning']);
+
+          merged.slice(0, 20).forEach((record) => {
+            const recordKey = `${record._id || record.sensor_id}:${record.createdAt || ''}:${record.ml_state || ''}`;
+            if (
+              notifyStates.has(record.ml_state) &&
+              !notifiedRecordKeys.current.has(recordKey)
+            ) {
+              notifiedRecordKeys.current.add(recordKey);
+              sendLiveAlertNotification(
+                record.sensor_id || 'Sensor',
+                record.ml_state,
+                formatEta(record) || undefined,
+              );
+            }
+          });
+
+          setPredictions(merged);
           setError(null);
         }
       } catch (err: any) {

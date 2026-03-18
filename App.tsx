@@ -8,7 +8,10 @@ import {
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { AuthProvider, useAuth } from './store/AuthContext';
-import { initNotifications } from './utils/NotificationService';
+import {
+  initNotifications,
+  sendTestNotification,
+} from './utils/NotificationService';
 import Dashboard from './Dashboard/Dashboard';
 import NodeDetails from './NodeDetails/NodeDetails';
 import Alerts from './Alerts/Alerts';
@@ -220,7 +223,11 @@ function MainTabs() {
 function App() {
   useEffect(() => {
     // Initialize push notifications on app start
-    initNotifications();
+    void initNotifications().then(() => {
+      setTimeout(() => {
+        sendTestNotification();
+      }, 1500);
+    });
   }, []);
 
   return (

@@ -55,7 +55,7 @@ function Tasks() {
       </View>
 
       {loading ? (
-        <ActivityIndicator color="#fff" style={{ marginTop: 40 }} />
+        <ActivityIndicator color="#4e9eff" size="large" style={{ marginTop: 40 }} />
       ) : error ? (
         <Text style={styles.errorText}>{error}</Text>
       ) : (
@@ -64,27 +64,24 @@ function Tasks() {
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
         >
-          {/* Table Header */}
-          <View style={styles.tableHeader}>
-            <Text style={[styles.colHeader, { flex: 1.2 }]}>Node Location</Text>
-            <Text style={[styles.colHeader, { flex: 2 }]}>Description</Text>
-            <Text style={[styles.colHeader, { flex: 1.5 }]}>Assigned To</Text>
-          </View>
-
           {tasks.length === 0 ? (
-            <Text style={styles.emptyText}>No tasks found.</Text>
+            <Text style={styles.emptyText}>No tasks assigned to you.</Text>
           ) : (
             tasks.map(task => (
-              <View key={task._id} style={styles.tableRow}>
-                <Text style={[styles.cellText, { flex: 1.2 }]}>
-                  {task.node_id?.location ?? '—'}
-                </Text>
-                <Text style={[styles.cellText, { flex: 2 }]}>{task.title}</Text>
-                <Text style={[styles.cellText, { flex: 1.5 }]}>
-                  {task.assigned_to
-                    ? `${task.assigned_to.first_name} ${task.assigned_to.last_name}`
-                    : '—'}
-                </Text>
+              <View key={task._id} style={styles.taskCard}>
+                <View style={styles.taskCardHeader}>
+                  <View style={styles.taskNodeBadge}>
+                    <Text style={styles.taskNodeText}>
+                      {task.node_id?.location ?? 'Unknown'}
+                    </Text>
+                  </View>
+                  {task.assigned_to && (
+                    <Text style={styles.taskAssignedText}>
+                      {task.assigned_to.first_name} {task.assigned_to.last_name}
+                    </Text>
+                  )}
+                </View>
+                <Text style={styles.taskTitle}>{task.title}</Text>
               </View>
             ))
           )}
@@ -96,29 +93,53 @@ function Tasks() {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  header: { paddingTop: 60, paddingHorizontal: 16, paddingBottom: 12 },
-  pageTitle: { color: '#fff', fontSize: 22, fontWeight: 'bold' },
+  header: { paddingTop: 60, paddingHorizontal: 16, paddingBottom: 24 },
+  pageTitle: { 
+    color: '#fff', 
+    fontSize: 28, 
+    fontWeight: '700',
+    letterSpacing: 0.5,
+  },
   scroll: { flex: 1 },
-  scrollContent: { paddingHorizontal: 12, paddingBottom: 20 },
-  tableHeader: {
-    flexDirection: 'row',
-    backgroundColor: 'rgba(255,255,255,0.1)',
-    borderRadius: 8,
-    paddingVertical: 10,
-    paddingHorizontal: 8,
-    marginBottom: 4,
+  scrollContent: { paddingHorizontal: 16, paddingBottom: 100 },
+  taskCard: {
+    backgroundColor: 'rgba(26, 41, 66, 0.8)',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 12,
+    borderLeftWidth: 4,
+    borderLeftColor: '#4e9eff',
   },
-  colHeader: { color: '#9CA3AF', fontSize: 11, fontWeight: '700' },
-  tableRow: {
+  taskCardHeader: {
     flexDirection: 'row',
-    paddingVertical: 12,
-    paddingHorizontal: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: 'rgba(255,255,255,0.07)',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
   },
-  cellText: { color: '#fff', fontSize: 12 },
-  emptyText: { color: '#6B7280', textAlign: 'center', marginTop: 30 },
-  errorText: { color: '#F87171', textAlign: 'center', marginTop: 30 },
+  taskNodeBadge: {
+    backgroundColor: 'rgba(96, 165, 250, 0.2)',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: 'rgba(96, 165, 250, 0.4)',
+  },
+  taskNodeText: {
+    color: '#60A5FA',
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  taskAssignedText: {
+    color: '#9CA3AF',
+    fontSize: 12,
+  },
+  taskTitle: {
+    color: '#fff',
+    fontSize: 15,
+    fontWeight: '600',
+  },
+  emptyText: { color: '#6B7280', textAlign: 'center', marginTop: 40, fontSize: 14 },
+  errorText: { color: '#F87171', textAlign: 'center', marginTop: 30, fontSize: 14 },
 });
 
 export default Tasks;

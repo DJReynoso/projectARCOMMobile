@@ -1,124 +1,32 @@
-import PushNotification from 'react-native-push-notification';
-import { Platform } from 'react-native';
+import notifee, { AndroidImportance } from '@notifee/react-native';
 
-// Initialize push notification
-export const initNotifications = () => {
-  PushNotification.configure({
-    // (optional) Called when Token is generated (iOS and Android)
-    onRegister: function (token) {
-      console.log('TOKEN:', token);
-    },
+const DEFAULT_CHANNEL_ID = 'ARCOM_ALERTS';
+const CRITICAL_CHANNEL_ID = 'CRITICAL_ALERTS';
 
-    // (required) Called when a remote is received or opened, or local notification is opened
-    onNotification: function (notification) {
-      console.log('NOTIFICATION:', notification);
-    },
+// Initialize local push notifications
+export const initNotifications = async () => {
+  try {
+    await notifee.requestPermission();
 
-    // (optional) Called when Registered Action is pressed and invokeApp is false, if true onNotification will be called (Android)
-    onAction: function (notification) {
-      console.log('ACTION:', notification.action);
-      console.log('NOTIFICATION:', notification);
-    },
+    await notifee.createChannel({
+      id: DEFAULT_CHANNEL_ID,
+      name: 'Drainage Alerts',
+      description: 'Real-time drainage system alerts and notifications',
+      importance: AndroidImportance.HIGH,
+      vibration: true,
+      sound: 'default',
+    });
 
-    // (optional) Called when the user fails to register for remote notifications. Typically occurs when APNS is having issues, or the device is a simulator. (iOS)
-    onRegistrationError: function (err) {
-      console.error(err.message, err);
-    },
-
-    // IOS ONLY (optional): default: all - Permissions to register.
-    permissions: {
-      alert: true,
-      badge: true,
-      sound: true,
-    },
-
-    // Should the initial notification be popped automatically
-    // default: true
-    popInitialNotification: true,
-
-    /**
-     * Android only
-     * default: "ic_launcher"
-     * You can use `react-native-vector-icons` to automate this step.
-     */
-    largeIcon: 'ic_launcher',
-
-    /**
-     * Android only
-     * default: "ic_notification"
-     */
-    smallIcon: 'ic_notification',
-
-    /**
-     * Android only
-     * default: true
-     * Set notification color. This is an Android-only property that works with android 5.0+
-     */
-    color: '#3b82f6',
-
-    /**
-     * Android only
-     * Set the vibration pattern for notifications
-     */
-    vibrate: true,
-
-    /**
-     * Android only
-     * default: true
-     * Enable or disable vibration
-     */
-    vibration: 300,
-
-    /**
-     * Android only
-     * default: true
-     * Enable or disable notification sounds
-     */
-    soundName: 'default',
-
-    /**
-     * Android and iOS
-     * -1 is infinite, default: -1
-     */
-    playSound: true,
-
-    /**
-     * Android only
-     * Channels to be created for notifications
-     */
-    channelId: 'ARCOM_ALERTS',
-    channelName: 'Drainage Alerts',
-    channelDescription: 'Real-time drainage system alerts and notifications',
-  });
-
-  // Create notification channel for Android 8+
-  if (Platform.OS === 'android') {
-    PushNotification.createChannel(
-      {
-        channelId: 'ARCOM_ALERTS',
-        channelName: 'Drainage Alerts',
-        channelDescription: 'Real-time drainage system alerts and notifications',
-        playSound: true,
-        soundName: 'default',
-        importance: 4, // high importance
-        vibrate: true,
-      },
-      (created) => console.log(`CreateChannel returned '${created}'`)
-    );
-
-    // Critical alerts channel
-    PushNotification.createChannel(
-      {
-        channelId: 'CRITICAL_ALERTS',
-        channelName: 'Critical Alerts',
-        channelDescription: 'Critical overflow and clog alerts',
-        playSound: true,
-        soundName: 'default',
-        importance: 5, // max importance
-        vibrate: true,
-      },
-      (created) => console.log(`CreateChannel returned '${created}'`)
-    );
+    await notifee.createChannel({
+      id: CRITICAL_CHANNEL_ID,
+      name: 'Critical Alerts',
+      description: 'Critical overflow and clog alerts',
+      importance: AndroidImportance.HIGH,
+      vibration: true,
+      sound: 'default',
+    });
+  } catch (error) {
+    console.error('Failed to initialize notifications', error);
   }
 };
 
@@ -126,33 +34,38 @@ export const initNotifications = () => {
 export const sendAlertNotification = (
   title: string,
   message: string,
-  data?: any,
+  data?: Record<string, unknown>,
   isCritical: boolean = false
 ) => {
-  PushNotification.localNotification({
-    channelId: isCritical ? 'CRITICAL_ALERTS' : 'ARCOM_ALERTS',
-    title: title,
-    message: message,
-    bigText: message,
-    subText: 'ARCOM System',
-    soundName: isCritical ? 'default' : 'default',
-    playSound: true,
-    vibrate: isCritical ? [0, 500, 250, 500] : [0, 300], // longer vibration for critical
-    priority: isCritical ? 'high' : 'default',
-    visibility: 'public',
-    autoCancel: true,
-    largeIcon: 'ic_launcher',
-    smallIcon: 'ic_notification',
-    color: isCritical ? '#ef4444' : '#3b82f6', // red for critical, blue for normal
-    data: data || {},
-    // Android-specific
-    ...Platform.select({
-      android: {
-        ongoing: false,
-        number: 1,
+  void notifee.displayNotification({
+    title,
+    body: message,
+    data: {
+      ...(data ?? {}),
+      source: 'ARCOM System',
+    },
+    android: {
+      channelId: isCritical ? CRITICAL_CHANNEL_ID : DEFAULT_CHANNEL_ID,
+      smallIcon: 'ic_launcher',
+      color: isCritical ? '#ef4444' : '#3b82f6',
+      pressAction: {
+        id: 'default',
       },
-    }),
+      importance: AndroidImportance.HIGH,
+      vibrationPattern: isCritical ? [300, 500, 300, 500] : [200, 300],
+    },
+  }).catch((error) => {
+    console.error('Failed to show notification', error);
   });
+};
+
+export const sendTestNotification = () => {
+  sendAlertNotification(
+    'Push Test',
+    'ARCOM notifications are enabled on this device.',
+    { type: 'test' },
+    false
+  );
 };
 
 // Send notification for task update
@@ -199,5 +112,3 @@ export const sendLiveAlertNotification = (
     config.critical
   );
 };
-
-export default PushNotification;
