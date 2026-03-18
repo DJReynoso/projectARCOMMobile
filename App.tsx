@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import {
   createStackNavigator,
@@ -8,6 +8,7 @@ import {
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { AuthProvider, useAuth } from './store/AuthContext';
+import { initNotifications } from './utils/NotificationService';
 import Dashboard from './Dashboard/Dashboard';
 import NodeDetails from './NodeDetails/NodeDetails';
 import Alerts from './Alerts/Alerts';
@@ -217,6 +218,11 @@ function MainTabs() {
 
 // Root Navigator
 function App() {
+  useEffect(() => {
+    // Initialize push notifications on app start
+    initNotifications();
+  }, []);
+
   return (
     <AuthProvider>
       <NavigationContainer>
