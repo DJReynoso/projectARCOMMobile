@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const BASE_URL = 'http://10.0.2.2:5001';
 
@@ -116,26 +117,46 @@ function Alerts() {
         <Text style={styles.pageTitle}>Alerts</Text>
         <View style={styles.counters}>
           <View style={styles.counter}>
-            <Text style={styles.counterLabel}>Total</Text>
-            <Text style={styles.counterValue}>{tasks.length}</Text>
+            <View style={styles.counterIcon}>
+              <Icon name="alert-circle-outline" size={24} color="#d1fae5" />
+            </View>
+            <View style={styles.counterInfo}>
+              <Text style={styles.counterLabel}>Total Alerts</Text>
+              <Text style={styles.counterValue}>{tasks.length}</Text>
+            </View>
           </View>
           <View style={[styles.counter, styles.counterUnresolved]}>
-            <Text style={styles.counterLabel}>Unresolved</Text>
-            <Text style={[styles.counterValue, { color: '#F87171' }]}>
-              {pendingTasks.length}
-            </Text>
+            <View style={styles.counterIcon}>
+              <Icon name="alert-outline" size={24} color="#ef4444" />
+            </View>
+            <View style={styles.counterInfo}>
+              <Text style={styles.counterLabel}>Unresolved</Text>
+              <Text style={[styles.counterValue, { color: '#ef4444' }]}>
+                {pendingTasks.length}
+              </Text>
+            </View>
           </View>
           <View style={[styles.counter, styles.counterOngoing]}>
-            <Text style={styles.counterLabel}>Ongoing</Text>
-            <Text style={[styles.counterValue, { color: '#FBBF24' }]}>
-              {ongoingTasks.length}
-            </Text>
+            <View style={styles.counterIcon}>
+              <Icon name="hourglass-outline" size={24} color="#fbbf24" />
+            </View>
+            <View style={styles.counterInfo}>
+              <Text style={styles.counterLabel}>Ongoing</Text>
+              <Text style={[styles.counterValue, { color: '#fbbf24' }]}>
+                {ongoingTasks.length}
+              </Text>
+            </View>
           </View>
           <View style={[styles.counter, styles.counterResolved]}>
-            <Text style={styles.counterLabel}>Resolved</Text>
-            <Text style={[styles.counterValue, { color: '#34D399' }]}>
-              {resolvedTasks.length}
-            </Text>
+            <View style={styles.counterIcon}>
+              <Icon name="checkmark-circle-outline" size={24} color="#10b981" />
+            </View>
+            <View style={styles.counterInfo}>
+              <Text style={styles.counterLabel}>Resolved</Text>
+              <Text style={[styles.counterValue, { color: '#10b981' }]}>
+                {resolvedTasks.length}
+              </Text>
+            </View>
           </View>
         </View>
       </View>
@@ -225,68 +246,79 @@ const styles = StyleSheet.create({
   header: { paddingTop: 60, paddingHorizontal: 16, paddingBottom: 12 },
   pageTitle: {
     color: '#fff',
-    fontSize: 22,
-    fontWeight: 'bold',
-    marginBottom: 12,
+    fontSize: 28,
+    fontWeight: '700',
+    marginBottom: 20,
+    letterSpacing: 0.5,
   },
-  counters: { flexDirection: 'row', gap: 8 },
+  counters: { flexDirection: 'column', gap: 12 },
   counter: {
-    flex: 1,
-    backgroundColor: 'rgba(255,255,255,0.07)',
-    borderRadius: 8,
-    padding: 8,
+    flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: 'rgba(255,255,255,0.05)',
+    borderRadius: 12,
+    padding: 16,
+    minHeight: 80,
   },
-  counterUnresolved: { borderTopWidth: 2, borderTopColor: '#F87171' },
-  counterOngoing: { borderTopWidth: 2, borderTopColor: '#FBBF24' },
-  counterResolved: { borderTopWidth: 2, borderTopColor: '#34D399' },
-  counterLabel: { color: '#9CA3AF', fontSize: 9, textAlign: 'center' },
-  counterValue: { color: '#fff', fontSize: 18, fontWeight: 'bold' },
+  counterIcon: {
+    width: 48,
+    height: 48,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 16,
+  },
+  counterInfo: {
+    flex: 1,
+  },
+  counterUnresolved: { borderTopWidth: 2, borderTopColor: '#ef4444' },
+  counterOngoing: { borderTopWidth: 2, borderTopColor: '#fbbf24' },
+  counterResolved: { borderTopWidth: 2, borderTopColor: '#10b981' },
+  counterLabel: { color: '#b4b4b4', fontSize: 12, fontWeight: '400', marginBottom: 4 },
+  counterValue: { color: '#fff', fontSize: 20, fontWeight: '700' },
   tabContainer: {
     flexDirection: 'row',
     marginHorizontal: 16,
-    backgroundColor: 'rgba(255,255,255,0.07)',
-    borderRadius: 999,
-    padding: 4,
+    marginTop: 12,
     marginBottom: 12,
   },
   tabButton: {
     flex: 1,
     paddingVertical: 8,
-    borderRadius: 999,
+    paddingHorizontal: 8,
     alignItems: 'center',
   },
   tabButtonActive: {
-    backgroundColor: '#121E33',
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.3)',
+    borderBottomWidth: 3,
+    borderBottomColor: '#4e9eff',
   },
-  tabText: { color: '#6B7280', fontSize: 12, fontWeight: '500' },
-  tabTextActive: { color: '#fff' },
+  tabText: { color: '#7a8db5', fontSize: 13, fontWeight: '500' },
+  tabTextActive: { color: '#fff', fontWeight: '600' },
   scroll: { flex: 1 },
   scrollContent: { paddingHorizontal: 16, paddingBottom: 20 },
   emptyText: { color: '#6B7280', textAlign: 'center', marginTop: 30 },
   errorText: { color: '#F87171', textAlign: 'center', marginTop: 30 },
   taskCard: {
-    backgroundColor: 'rgba(18,30,51,0.85)',
-    borderRadius: 12,
-    padding: 14,
+    backgroundColor: 'rgba(26, 41, 66, 0.8)',
+    borderRadiusRadius: 12,
+    padding: 16,
     marginBottom: 12,
   },
   taskCardHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 8,
+    marginBottom: 12,
+    alignItems: 'center',
   },
   taskDate: { color: '#6B7280', fontSize: 11 },
-  taskNode: { color: '#60A5FA', fontSize: 11, fontWeight: '600' },
+  taskNode: { color: '#60A5FA', fontSize: 11, fontWeight: '600', backgroundColor: 'rgba(96, 165, 250, 0.1)', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 4 },
   taskTitle: {
     color: '#fff',
     fontSize: 15,
     fontWeight: '700',
-    marginBottom: 4,
+    marginBottom: 8,
   },
-  taskDesc: { color: '#9CA3AF', fontSize: 13, marginBottom: 10 },
+  taskDesc: { color: '#9CA3AF', fontSize: 13, marginBottom: 12, lineHeight: 18 },
   taskActions: { flexDirection: 'row', gap: 8 },
   acknowledgeBtn: {
     backgroundColor: '#2563EB',
