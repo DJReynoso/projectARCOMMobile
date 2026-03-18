@@ -15,6 +15,7 @@ import Tasks from './Worker/Tasks';
 import WorkerLogin from './Worker/WorkerLogin';
 import Home from './Home/Home';
 import WorkerHome from './Worker/WorkerHome';
+import LiveAlerts from './LiveAlerts/LiveAlerts';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -51,6 +52,15 @@ function AlertsStack() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="AlertsHome" component={Alerts} />
+    </Stack.Navigator>
+  );
+}
+
+// Live Alerts Stack Navigator
+function LiveAlertsStack() {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="LiveAlertsScreen" component={LiveAlerts} />
     </Stack.Navigator>
   );
 }
@@ -148,6 +158,16 @@ function MainTabs() {
               tabBarLabel: 'Alerts',
               tabBarIcon: ({ color, size }) => (
                 <Icon name="notifications-outline" color={color} size={size} />
+              ),
+            }}
+          />
+          <Tab.Screen
+            name="LiveAlerts"
+            component={LiveAlertsStack}
+            options={{
+              tabBarLabel: 'Live Feed',
+              tabBarIcon: ({ color, size }) => (
+                <Icon name="broadcast" color={color} size={size} />
               ),
             }}
           />
