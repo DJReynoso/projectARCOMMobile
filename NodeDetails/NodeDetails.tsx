@@ -63,7 +63,9 @@ function NodeDetails() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.pageTitle}>Node Details</Text>
+        <View style={styles.header}>
+          <Text style={styles.pageTitle}>Node Details</Text>
+        </View>
 
         {sampleSensors.map(sensor => (
           <View key={sensor._id} style={styles.cardWrapper}>
@@ -162,57 +164,72 @@ function NodeDetails() {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  scroll: { flex: 1, marginTop: 60 },
-  scrollContent: { padding: 16, paddingBottom: 30 },
+  scroll: { flex: 1 },
+  scrollContent: { paddingBottom: 100 },
+  header: {
+    paddingTop: 60,
+    paddingHorizontal: 16,
+    paddingBottom: 24,
+  },
   pageTitle: {
     color: '#fff',
-    fontSize: 22,
-    fontWeight: 'bold',
-    marginBottom: 16,
+    fontSize: 28,
+    fontWeight: '700',
+    letterSpacing: 0.5,
   },
   cardWrapper: {
-    marginBottom: 16,
-    borderRadius: 12,
+    marginHorizontal: 16,
+    marginBottom: 20,
+    borderRadius: 16,
     overflow: 'hidden',
     elevation: 8,
   },
-  card: { borderRadius: 12, padding: 16 },
+  card: { 
+    borderRadius: 16, 
+    padding: 20, 
+    backgroundColor: 'rgba(18, 30, 51, 0.85)',
+  },
   cardHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 14,
+    marginBottom: 20,
   },
-  statusBadge: { paddingHorizontal: 10, paddingVertical: 4, borderRadius: 999 },
-  statusBadgeText: { fontSize: 11, fontWeight: '700' },
+  statusBadge: { 
+    paddingHorizontal: 12, 
+    paddingVertical: 6, 
+    borderRadius: 8,
+  },
+  statusBadgeText: { fontSize: 12, fontWeight: '700' },
   timestamp: { color: '#6B7280', fontSize: 11 },
-  metricsGrid: { flexDirection: 'row', flexWrap: 'wrap', marginBottom: 14 },
-  metricItem: { width: '50%', paddingVertical: 8, paddingRight: 8 },
-  metricLabel: { color: '#9CA3AF', fontSize: 11, marginBottom: 2 },
-  metricValue: { color: '#fff', fontSize: 14, fontWeight: '600' },
+  metricsGrid: { flexDirection: 'row', flexWrap: 'wrap', marginBottom: 20 },
+  metricItem: { width: '50%', paddingVertical: 12, paddingRight: 12 },
+  metricLabel: { color: '#9CA3AF', fontSize: 12, fontWeight: '400', marginBottom: 6 },
+  metricValue: { color: '#fff', fontSize: 16, fontWeight: '700' },
   insightsSection: {
     borderTopWidth: 1,
     borderTopColor: 'rgba(255,255,255,0.1)',
-    paddingTop: 12,
-    marginBottom: 12,
+    paddingTop: 16,
+    marginBottom: 16,
   },
   insightsTitle: {
-    color: '#9CA3AF',
-    fontSize: 12,
+    color: '#d1fae5',
+    fontSize: 13,
     fontWeight: '600',
-    marginBottom: 4,
+    marginBottom: 8,
+    letterSpacing: 0.3,
   },
-  insightsText: { color: '#6B7280', fontSize: 12, lineHeight: 18 },
+  insightsText: { color: '#9CA3AF', fontSize: 13, lineHeight: 20 },
   trendsButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 6,
+    gap: 8,
     backgroundColor: 'rgba(255,255,255,0.1)',
     borderRadius: 8,
-    padding: 10,
+    padding: 12,
   },
-  trendsButtonText: { color: '#fff', fontSize: 13 },
+  trendsButtonText: { color: '#fff', fontSize: 13, fontWeight: '600' },
 });
 
 export default NodeDetails;
