@@ -227,7 +227,7 @@ function LiveAlerts() {
                     <View style={styles.dataRow}>
                       <Text style={styles.dataLabel}>Flow Rate:</Text>
                       <Text style={styles.dataValue}>
-                        {record.flow_rate.toFixed(2)} L/s
+                        {record.flow_rate.toFixed(2)} cm/s
                       </Text>
                     </View>
                   )}
