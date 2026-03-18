@@ -1,15 +1,13 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Text,
   StyleSheet,
   View,
   ScrollView,
   ActivityIndicator,
-  Alert as RNAlert,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { io } from 'socket.io-client';
 
 const BASE_URL = 'http://10.0.2.2:5001';
 
@@ -95,7 +93,6 @@ function LiveAlerts() {
   const [predictions, setPredictions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const socketRef = useRef<any>(null);
 
   useEffect(() => {
     const fetchPredictions = async () => {
@@ -118,28 +115,6 @@ function LiveAlerts() {
     fetchPredictions();
     const interval = setInterval(fetchPredictions, 10000);
     return () => clearInterval(interval);
-  }, []);
-
-  useEffect(() => {
-    try {
-      socketRef.current = io(BASE_URL, { transports: ['websocket'] });
-      socketRef.current.on('new_prediction', (data: any) => {
-        if (data && data.ml_state) {
-          setPredictions((prev) => upsertPrediction(prev, data).slice(0, 100));
-        }
-      });
-      socketRef.current.on('connect_error', (error: any) => {
-        console.log('Socket connection error:', error);
-      });
-    } catch (err) {
-      console.error('Socket.IO error:', err);
-    }
-
-    return () => {
-      if (socketRef.current) {
-        socketRef.current.disconnect();
-      }
-    };
   }, []);
 
   const getStateIcon = (mlState: string) => {
